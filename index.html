@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+    <title>Library</title>
+</head>
+<body>
+    <button id="new-book" class="active button">New Book</button>
+    <form id="new-book-form" class="inactive">
+        <button id="back" class="button" type="reset">✖</button>
+        <label for="tilte">Title</label>
+        <input type="text" class="entry" id="title" required>
+        <label for="author">author</label>
+        <input type="text" class="entry" id="author" required>
+        <label for="pages">Pages</label>
+        <input type="number" class="entry" id="pages" required>
+        <label for="read"></label>
+        <select class="entry" id="read" required>
+            <option value="1">To read</option>
+            <option value="2" >Already read</option>
+        </select>
+        <input type="submit" class="button" id="submit" value="Add"></input>
+    </form>
+    <div id="library"></div>
+</body>
+<script src="./script.js"></script>
+</html>

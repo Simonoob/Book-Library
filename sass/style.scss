@@ -1,0 +1,124 @@
+body{
+    background-color: #fdfbf8;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+
+    .button{
+        display: block;
+        padding: 1em;
+        font-size: 2.5em;
+        margin:2em auto;
+        width: 20rem;
+        border-radius: 10px;
+        border: 5px solid #1f3c38;
+        color: #fdfbf8;
+        background-color: #f03d29;;
+        cursor: pointer;
+        outline: none;
+        transition: all .2s;
+
+        &:hover{
+            transform: scale(1.1);
+        }
+
+        &:active{
+            transform: scale(1);
+        }
+    }
+
+    #new-book-form{
+        
+        flex-direction: column;
+        min-width: 15rem;
+        max-width: 38rem;
+        font-size: 2em;
+        margin: 2em auto;
+        padding: 2em;
+        color: #fdfbf8;
+        background-color: #4cae9f;
+        border-radius: 10px;
+        border: 5px solid #1f3c38;
+        box-shadow: 30px 30px #1f3c38;
+        transition: all .2s;
+
+        input:valid{
+            background-color: lightgreen;
+        }
+
+        label{
+            font-size: 1.3em;
+            margin-bottom: 0.5em;
+        }
+
+        .entry{
+            font-size: 0.7em;
+            border-radius: 10px;
+            border: 5px solid #1f3c38;
+            outline: none;
+            padding: 1rem;
+            margin-bottom: 1.5em;
+        }
+
+        #submit{
+            padding: 1em;
+            font-size: 1.5em;
+            background-color: #f03d29;
+            color: #fdfbf8;
+            border: 5px solid #1f3c38;
+            margin:0 auto;
+        }
+
+        #back{
+            width: 3em;
+            padding: 0.5em;
+            font-size: 1em;
+            background-color: #f03d29;
+            color: #fdfbf8;
+            border: 5px solid #1f3c38;
+            margin: 0;
+            margin-bottom: 1em;
+        }
+    }
+
+    #library{
+        display: grid;
+        grid-template-columns: repeat(auto-fit , minmax(15rem, 40rem));
+        grid-template-rows: repeat(auto-fit);
+        margin: 4em;
+        grid-gap: 5em;
+        justify-content: center;
+    
+        section{
+            background-color: #4cae9f;
+            color: #fdfbf8;
+            display: flex;
+            flex-direction: column;
+            padding: 2em;
+            font-size: 1.5em;
+            border-radius: 10px;
+            box-shadow: 30px 30px #1f3c38;
+            border: 5px solid #1f3c38;
+            span{
+                margin:.5em;
+            }
+        }
+    }
+
+    .active{
+        transform: scale(1);
+        display: flex;
+        justify-content: center;
+    }
+
+    .inactive{
+        transform: scale(0);
+        display: none;
+    }
+
+    #empty-library-message{
+        font-size: 2.5em;
+        border-bottom: 5px solid #f03d29;
+        margin: 0 2em;
+        text-align: center;
+    }
+}
