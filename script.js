@@ -6,9 +6,8 @@ function Book(title,author,pages,read){
 }
 
 const libraryHTML = document.getElementById("library");
-
+//creating the card for the book
 Book.prototype.showInfo = function(){
-    console.log(`${this.title} by ${this.author}. ${this.pages} pages long. ${this.read}.`);
     const book = document.createElement("section");
     book.setAttribute("id", this.title );
     const title = document.createElement("span");
@@ -31,13 +30,13 @@ Book.prototype.showInfo = function(){
 }
 
 let myLibrary = [];
-
+//creating the message HTML element
 const emptyLibraryMessage = document.createElement("span");
 emptyLibraryMessage.setAttribute("id", "empty-library-message");
 
 function addBookToLibrary(e){
     e.preventDefault();
-
+    //Creating the new book object
     const titleInput = document.getElementById("title");
     const authorInput = document.getElementById("author");
     const pagesInput = document.getElementById("pages");
@@ -45,15 +44,15 @@ function addBookToLibrary(e){
     const readSelection = readOptions.options[readOptions.selectedIndex].text;
 
     book = new Book(titleInput.value, authorInput.value, pagesInput.value, readSelection);
-
+    //adding it to the array
     myLibrary.length === 0 ? myLibrary[myLibrary.length] = book : myLibrary[myLibrary.length -1] = book;
     
     toggleForm();
-
     renderContent();
 }
 
 function renderContent(){
+    //implementing message for empty library
     if (myLibrary.length === 0){
         emptyLibraryMessage.textContent = "It looks like your librabry is empty, try adding a new book.";
         emptyLibraryMessage.style.display = "inherit";
@@ -69,7 +68,7 @@ function renderContent(){
 
 renderContent();
 
-
+//Adding event listeners to buttons
 const newBookButton = document.getElementById("new-book");
 newBookButton.addEventListener("click", toggleForm);
 const form = document.getElementById("new-book-form");
