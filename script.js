@@ -21,22 +21,29 @@ Book.prototype.createBookCard = function(){
     const pages = document.createElement("span");
     pages.setAttribute("class", "pages");
     pages.textContent = `Pages: ${this.pages}`;
-    //adding read button fun
+    
+    //adding read button
     const read = document.createElement("button");
-    read.setAttribute("class", "read");
-    read.classList.add("button");
+    read.classList.add("read", "button");
     read.textContent = this.read;
     read.addEventListener("click", toggleRead);
+    if (read.textContent === "To read") {
+        book.style.boxShadow = "30px 30px #f03d29";
+    } else{
+        read.style.background = "lightgreen";
+        book.style.boxShadow = "30px 30px lightgreen";
+    }
+
+
     //Adding delete button to the card
     const deleteButton = document.createElement("button");
     const deleteIcon = document.createElement("a");
     deleteIcon.classList.add("delete-icon");
     deleteIcon.innerHTML = '<i class="far fa-trash-alt"></i>';
     deleteButton.setAttribute("id","delete-button");
-    deleteButton.classList.add("class", "button");
+    deleteButton.classList.add("button");
     deleteButton.addEventListener("click", deleteCard);
     deleteButton.appendChild(deleteIcon);
-
 
     //rendering the card
     book.appendChild(deleteButton);
@@ -48,12 +55,7 @@ Book.prototype.createBookCard = function(){
 }
 
 
-//Delete after completing the app
-const sampleBook = new Book("The title", "The author", 33, "To read");
-const otherSampleBook = new Book("The other title", "The other author", 34, "Already read");
-
-
-let myLibrary = [sampleBook, otherSampleBook];
+let myLibrary = [];
 //creating the message HTML element
 const emptyLibraryMessage = document.createElement("span");
 emptyLibraryMessage.setAttribute("id", "empty-library-message");
@@ -91,7 +93,6 @@ function addBookToLibrary(e){
 
 function renderContent(){
     //implementing message for empty library and clearing screen
-
     const booksDOM = document.getElementsByClassName("book");
     const booksDOMArray = Array.from(booksDOM);
     booksDOMArray.forEach(book => {
@@ -137,15 +138,8 @@ const deleteCard = (e) => {
 const toggleRead = (e) => {
     const target = e.target
     const targetIndex = myLibrary.findIndex( book => book.title === target.parentNode.id);
-    console.log(target);
-    console.log(targetIndex);
-    console.log(myLibrary[targetIndex].read);
-    myLibrary[targetIndex].read === "To read"? {
-        
-    } : {
-
-    };
+    myLibrary[targetIndex].read === "To read" ? myLibrary[targetIndex].read = "Already read" : myLibrary[targetIndex].read = "To read";
+    renderContent();
 }
 
-//not this
 renderContent();

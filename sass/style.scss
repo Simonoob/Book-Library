@@ -122,6 +122,14 @@ body{
                 padding: .25em;
                 width: fit-content;
             }
+
+            .to-read{
+                box-shadow: 30px 30px #f03d29;
+            }
+
+            .already-read{
+                background-color: lightgreen;
+            }
         }
     }
 
