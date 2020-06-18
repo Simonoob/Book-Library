@@ -21,9 +21,12 @@ Book.prototype.createBookCard = function(){
     const pages = document.createElement("span");
     pages.setAttribute("class", "pages");
     pages.textContent = `Pages: ${this.pages}`;
-    const read = document.createElement("span");
+    //adding read button fun
+    const read = document.createElement("button");
     read.setAttribute("class", "read");
+    read.classList.add("button");
     read.textContent = this.read;
+    read.addEventListener("click", toggleRead);
     //Adding delete button to the card
     const deleteButton = document.createElement("button");
     const deleteIcon = document.createElement("a");
@@ -34,6 +37,7 @@ Book.prototype.createBookCard = function(){
     deleteButton.addEventListener("click", deleteCard);
     deleteButton.appendChild(deleteIcon);
 
+
     //rendering the card
     book.appendChild(deleteButton);
     book.appendChild(title);
@@ -43,7 +47,13 @@ Book.prototype.createBookCard = function(){
     libraryHTML.appendChild(book);
 }
 
-let myLibrary = [];
+
+//Delete after completing the app
+const sampleBook = new Book("The title", "The author", 33, "To read");
+const otherSampleBook = new Book("The other title", "The other author", 34, "Already read");
+
+
+let myLibrary = [sampleBook, otherSampleBook];
 //creating the message HTML element
 const emptyLibraryMessage = document.createElement("span");
 emptyLibraryMessage.setAttribute("id", "empty-library-message");
@@ -101,9 +111,8 @@ function renderContent(){
     }
 }
 
-renderContent();
 
-//Adding event listeners to buttons
+//Adding event listeners to main buttons
 const newBookButton = document.getElementById("new-book");
 newBookButton.addEventListener("click", toggleForm);
 const form = document.getElementById("new-book-form");
@@ -118,11 +127,25 @@ function toggleForm(){
     form.classList.toggle("active");
 }
 
-
-
 const deleteCard = (e) => {
-    let target = e.target.parentNode.id;
+    const target = e.target.parentNode.id;
     const targetIndex = myLibrary.findIndex( book => book.title === target);
     myLibrary.splice(targetIndex, 1);
     renderContent();
 };
+
+const toggleRead = (e) => {
+    const target = e.target
+    const targetIndex = myLibrary.findIndex( book => book.title === target.parentNode.id);
+    console.log(target);
+    console.log(targetIndex);
+    console.log(myLibrary[targetIndex].read);
+    myLibrary[targetIndex].read === "To read"? {
+        
+    } : {
+
+    };
+}
+
+//not this
+renderContent();
