@@ -69,7 +69,8 @@ body{
         }
 
         #back{
-            width: 3em;
+            width: 2.5em;
+            height: fit-content;
             padding: 0.5em;
             font-size: 1em;
             background-color: #f03d29;
@@ -101,6 +102,19 @@ body{
             span{
                 margin:.5em;
             }
+            #delete-button{
+                margin: 0;
+                padding: .5em;
+                width: fit-content;
+                height: fit-content;
+                font-size: 1em;
+                align-self: flex-end;
+                position: sticky;
+
+                .delete-icon{
+                    pointer-events: none;
+                }
+            }
         }
     }
 
@@ -120,5 +134,14 @@ body{
         border-bottom: 5px solid #f03d29;
         margin: 0 2em;
         text-align: center;
+        padding: 1em;
+    }
+
+    .message{
+        font-size: 1.3em;
+        border-bottom: 5px solid #f03d29;
+        margin: 0.5 auto;
+        text-align: center;
+        padding: 0.5em; 
     }
 }
