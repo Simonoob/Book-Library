@@ -81,16 +81,18 @@ function addBookToLibrary(e){
 
 function renderContent(){
     //implementing message for empty library and clearing screen
-    if (myLibrary.length === 0){
+
+    const booksDOM = document.getElementsByClassName("book");
+    const booksDOMArray = Array.from(booksDOM);
+    booksDOMArray.forEach(book => {
+        book.remove();
+    });
+
+    if (!myLibrary.length){
         emptyLibraryMessage.textContent = "It looks like your librabry is empty, try adding a new book.";
         emptyLibraryMessage.style.display = "inherit";
         document.body.appendChild(emptyLibraryMessage);
     } else{
-        const booksDOM = document.getElementsByClassName("book");
-        const booksDOMArray = Array.from(booksDOM);
-        booksDOMArray.forEach(book => {
-            book.remove();
-        });
         myLibrary.forEach(book => {
             emptyLibraryMessage.textContent = "";
             emptyLibraryMessage.style.display = "none";
