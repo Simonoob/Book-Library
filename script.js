@@ -1,4 +1,24 @@
-function Book(title,author,pages,read){
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyD8A31LBNmCkEH2PNnyfF8NnZhRMnrDcLA",
+    authDomain: "book-library-final.firebaseapp.com",
+    databaseURL: "https://book-library-final.firebaseio.com",
+    projectId: "book-library-final",
+    storageBucket: "book-library-final.appspot.com",
+    messagingSenderId: "230840764530",
+    appId: "1:230840764530:web:3d098ebfa4aeee21861aeb",
+    measurementId: "G-FGX5859TSE"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();// Your web app's Firebase configuration
+
+
+
+
+
+
+function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
     this.pages = pages;
@@ -7,11 +27,11 @@ function Book(title,author,pages,read){
 
 const libraryHTML = document.getElementById("library");
 //creating the card for the book
-Book.prototype.createBookCard = function(){
+Book.prototype.createBookCard = function () {
     //creating DOM elements of the card
     const book = document.createElement("section");
     book.classList.add("book");
-    book.setAttribute("id", this.title );
+    book.setAttribute("id", this.title);
     const title = document.createElement("span");
     title.setAttribute("class", "title");
     title.textContent = `Title: ${this.title}`;
@@ -21,7 +41,7 @@ Book.prototype.createBookCard = function(){
     const pages = document.createElement("span");
     pages.setAttribute("class", "pages");
     pages.textContent = `Pages: ${this.pages}`;
-    
+
     //adding read button
     const read = document.createElement("button");
     read.classList.add("read", "button");
@@ -29,7 +49,7 @@ Book.prototype.createBookCard = function(){
     read.addEventListener("click", toggleRead);
     if (read.textContent === "To read") {
         book.style.boxShadow = "30px 30px #f03d29";
-    } else{
+    } else {
         read.style.background = "lightgreen";
         book.style.boxShadow = "30px 30px lightgreen";
     }
@@ -40,7 +60,7 @@ Book.prototype.createBookCard = function(){
     const deleteIcon = document.createElement("a");
     deleteIcon.classList.add("delete-icon");
     deleteIcon.innerHTML = '<i class="far fa-trash-alt"></i>';
-    deleteButton.setAttribute("id","delete-button");
+    deleteButton.setAttribute("id", "delete-button");
     deleteButton.classList.add("button");
     deleteButton.addEventListener("click", deleteCard);
     deleteButton.appendChild(deleteIcon);
@@ -60,7 +80,7 @@ let myLibrary = [];
 const emptyLibraryMessage = document.createElement("span");
 emptyLibraryMessage.setAttribute("id", "empty-library-message");
 
-function addBookToLibrary(e){
+function addBookToLibrary(e) {
     e.preventDefault();
     //Creating the new book object
     const titleInput = document.getElementById("title");
@@ -69,10 +89,10 @@ function addBookToLibrary(e){
     const readOptions = document.getElementById("read");
     const readSelection = readOptions.options[readOptions.selectedIndex].text;
 
-    const BookAlreadyPresent = myLibrary.some( book => {
+    const BookAlreadyPresent = myLibrary.some(book => {
         return book.title === titleInput.value && book.author === authorInput.value;
     });
-    if (BookAlreadyPresent){
+    if (BookAlreadyPresent) {
         const message = document.createElement("span");
         message.setAttribute("id", "book-already-present");
         message.classList.add("message");
@@ -87,11 +107,12 @@ function addBookToLibrary(e){
     book = new Book(titleInput.value, authorInput.value, pagesInput.value, readSelection);
     //adding it to the array
     myLibrary.push(book);
+    saveBook(book);
     toggleForm();
     renderContent();
 }
 
-function renderContent(){
+function renderContent() {
     //implementing message for empty library and clearing screen
     const booksDOM = document.getElementsByClassName("book");
     const booksDOMArray = Array.from(booksDOM);
@@ -99,11 +120,11 @@ function renderContent(){
         book.remove();
     });
 
-    if (!myLibrary.length){
+    if (!myLibrary.length) {
         emptyLibraryMessage.textContent = "It looks like your librabry is empty, try adding a new book.";
         emptyLibraryMessage.style.display = "inherit";
         document.body.appendChild(emptyLibraryMessage);
-    } else{
+    } else {
         myLibrary.forEach(book => {
             emptyLibraryMessage.textContent = "";
             emptyLibraryMessage.style.display = "none";
@@ -121,7 +142,7 @@ const backButton = document.getElementById("back");
 backButton.addEventListener("click", toggleForm);
 form.addEventListener("submit", addBookToLibrary);
 
-function toggleForm(){
+function toggleForm() {
     newBookButton.classList.toggle("inactive");
     newBookButton.classList.toggle("active");
     form.classList.toggle("inactive");
@@ -130,16 +151,50 @@ function toggleForm(){
 
 const deleteCard = (e) => {
     const target = e.target.parentNode.id;
-    const targetIndex = myLibrary.findIndex( book => book.title === target);
+    const targetIndex = myLibrary.findIndex(book => book.title === target);
     myLibrary.splice(targetIndex, 1);
     renderContent();
 };
 
 const toggleRead = (e) => {
     const target = e.target
-    const targetIndex = myLibrary.findIndex( book => book.title === target.parentNode.id);
-    myLibrary[targetIndex].read === "To read" ? myLibrary[targetIndex].read = "Already read" : myLibrary[targetIndex].read = "To read";
+    const targetIndex = myLibrary.findIndex(book => book.title === target.parentNode.id);
+    if (myLibrary[targetIndex].read === "To read"){
+        myLibrary[targetIndex].read = "Already read";
+    
+        dbRefBooks.orderByChild("title").equalTo(e.target.parentNode.id).on("value", function(snapshot) {
+            console.log(snapshot.val());
+        });
+    } else {
+        myLibrary[targetIndex].read = "To read";
+    }
     renderContent();
 }
 
+
+//hooking up firebase real-time database
+
+//create reference in the database
+const dbRefBooks = firebase.database().ref().child("books");
+
+//create the new book ref
+const saveBook = (title, author, pages, read) => {
+    const newBookRef = dbRefBooks.push();
+    newBookRef.set(book);
+}
+
+//sync changes
+dbRefBooks.on("value", snap => {
+    console.log(snap.val());
+    myLibrary = [];
+    snap.forEach(element => {
+        elementVal = element.val();
+        newBook = new Book(elementVal.title, elementVal.author, elementVal.pages, elementVal.read);
+        myLibrary.push(newBook);
+    })
+    console.log(myLibrary);
+    renderContent();
+});
+
 renderContent();
+
