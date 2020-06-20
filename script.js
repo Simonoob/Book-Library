@@ -149,24 +149,31 @@ function toggleForm() {
     form.classList.toggle("active");
 }
 
+let targetRefValue = "";
+
 const deleteCard = (e) => {
     const target = e.target.parentNode.id;
     const targetIndex = myLibrary.findIndex(book => book.title === target);
-    myLibrary.splice(targetIndex, 1);
-    renderContent();
+    // deleting the object in the database
+    getDatabaseObject(e);
+    dbRefBooks.child(targetRefValue).remove()
 };
 
 const toggleRead = (e) => {
     const target = e.target
     const targetIndex = myLibrary.findIndex(book => book.title === target.parentNode.id);
-    if (myLibrary[targetIndex].read === "To read"){
-        myLibrary[targetIndex].read = "Already read";
-    
-        dbRefBooks.orderByChild("title").equalTo(e.target.parentNode.id).on("value", function(snapshot) {
-            console.log(snapshot.val());
+    if (myLibrary[targetIndex].read === "To read") {
+        // changing the value of "read" in the database
+        getDatabaseObject(e);
+        dbRefBooks.child(targetRefValue).update({
+            read : "Already read"
         });
     } else {
-        myLibrary[targetIndex].read = "To read";
+        // changing the value of "read" in the database
+        getDatabaseObject(e);
+        dbRefBooks.child(targetRefValue).update({
+            read : "To read"
+        });
     }
     renderContent();
 }
@@ -196,5 +203,23 @@ dbRefBooks.on("value", snap => {
     renderContent();
 });
 
-renderContent();
-
+const getDatabaseObject = (e) => {
+    dbRefBooks.orderByChild("title").equalTo(e.target.parentNode.id).on("value", function (snapshot) {
+        console.log(snapshot.val());
+        const targetRefString = JSON.stringify(snapshot.val());
+        console.log(targetRefString);
+        const targetRefArray = Array.from(targetRefString);
+        const targetRef = targetRefArray.splice(2, 20).toString();
+        console.log(targetRef);
+        targetRefValue = "";
+        const getTargetRefValue = () => {
+            for (let index = 0; index < targetRef.length; index++) {
+                let element = targetRef[index];
+                element === "," ? element = "" : {};
+                targetRefValue += element;
+            }
+        };
+        getTargetRefValue();
+        console.log(targetRefValue);
+    });
+}
