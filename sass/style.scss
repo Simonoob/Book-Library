@@ -8,7 +8,7 @@ body{
         padding: 1em;
         font-size: 2.5em;
         margin:2em auto;
-        width: 20rem;
+        width: fit-content;
         border-radius: 10px;
         border: 5px solid #1f3c38;
         color: #fdfbf8;
@@ -24,6 +24,37 @@ body{
         &:active{
             transform: scale(1);
         }
+    }
+
+    .log{
+        margin-top: 2rem;
+        width: fit-content;
+        font-size: 2rem;
+        background-color: #fdfbf8;
+        color: #1f3c38;
+        border-color: #1f3c38;
+        cursor: default;
+
+        &:hover{
+            box-shadow: 0 0.5rem 0.5rem 0.1rem #f03d2980;
+        }
+    }
+
+    #log-and-message{
+        position: sticky;
+        top: 2rem;
+        background: #fdfbf8c0;
+        z-index: 1;
+        padding: 1rem;
+    }
+
+    #welcome-message{
+        font-size: 2.5rem;
+        text-align: center;
+        border-bottom: 5px solid #f03d29;
+        padding: 0.5rem;
+        background: #fdfbf8e3;
+
     }
 
     #new-book-form{
@@ -153,7 +184,7 @@ body{
     }
 
     .message{
-        font-size: 1.3em;
+        font-size: 1em;
         border-bottom: 5px solid #f03d29;
         margin: 0.5 auto;
         text-align: center;

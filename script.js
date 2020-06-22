@@ -1,4 +1,6 @@
-// Your web app's Firebase configuration
+
+//firebase
+// web app's Firebase configuration
 var firebaseConfig = {
     apiKey: "AIzaSyD8A31LBNmCkEH2PNnyfF8NnZhRMnrDcLA",
     authDomain: "book-library-final.firebaseapp.com",
@@ -13,11 +15,86 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();// Your web app's Firebase configuration
 
+// Initialize the FirebaseUI Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+var uiConfig = {
+    callbacks: {
+        signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+            // User successfully signed in.
+            // Return type determines whether we continue the redirect automatically
+            // or whether we leave that to developer to handle.
+            return true;
+        },
+        uiShown: function () {
+            // The widget is rendered.
+            // Hide the loader.
+            document.getElementById('loader').style.display = 'none';
+        }
+    },
+    // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+    signInFlow: 'popup',
+    signInSuccessUrl: 'index.html',
+    signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    ],
+    // Terms of service url.
+    tosUrl: '<your-tos-url>',
+    // Privacy policy url.
+    privacyPolicyUrl: '<your-privacy-policy-url>'
+};
+
+// The start method will wait until the DOM is loaded.
+ui.start('#firebaseui-auth-container', uiConfig);
+
+//buttons and welcome message
+const loginUi = document.getElementById("firebaseui-auth-container");
+const logoutButton = document.getElementById("log-out");
+const welcomeMessage = document.getElementById("welcome-message");
+const logAndMessage = document.getElementById("log-and-message");
+//logout function
+
+const logOut = () => {
+    firebase.auth().signOut();
+}
+logoutButton.addEventListener("click", logOut);
+
+//create reference in the database
+let dbRefBooks;
+setDbRefBooks(firebase.auth().currentUser);
+function setDbRefBooks(user) {
+    user ? dbRefBooks = firebase.database().ref().child(user.uid) : dbRefBooks = firebase.database().ref().child("public");
+}
+
+//setting visibility
+firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+        // User is signed in.
+        loginUi.style.display = "none";
+        logoutButton.classList.add("active");
+        logoutButton.classList.remove("inactive");
+        welcomeMessage.textContent = `${user.displayName}'s library`;
+        logAndMessage.style.position = "inherit";
+        setDbRefBooks(user);
+        console.log(dbRefBooks.key);
+        sync();
+    }
+    else {
+        loginUi.style.display = "inherit";
+        logoutButton.classList.remove("active");
+        logoutButton.classList.add("inactive");
+        welcomeMessage.textContent = `You are now in the public space. Log in to manage your personal library`;
+        logAndMessage.style.position = "sticky";
+        setDbRefBooks(user);
+        console.log(dbRefBooks.key);
+        sync();
+    }
+});
 
 
 
-
-
+//actual app
 function Book(title, author, pages, read) {
     this.title = title;
     this.author = author;
@@ -90,17 +167,22 @@ function addBookToLibrary(e) {
     const readSelection = readOptions.options[readOptions.selectedIndex].text;
 
     const BookAlreadyPresent = myLibrary.some(book => {
-        return book.title === titleInput.value && book.author === authorInput.value;
+        return book.title === titleInput.value;
     });
     if (BookAlreadyPresent) {
         const message = document.createElement("span");
         message.setAttribute("id", "book-already-present");
-        message.classList.add("message");
-        message.textContent = "There is already a book with the same title by the same author";
-        form.appendChild(message);
-        setTimeout(() => {
-            message.remove();
-        }, 3000);
+        
+        if (!document.getElementById("book-already-present")){
+            form.appendChild(message);
+            message.classList.add("message");
+            message.textContent = "This book is already in your library. Please choose a different title";
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        } else {
+            return;
+        }
         return;
     }
 
@@ -121,7 +203,7 @@ function renderContent() {
     });
 
     if (!myLibrary.length) {
-        emptyLibraryMessage.textContent = "It looks like your librabry is empty, try adding a new book.";
+        emptyLibraryMessage.textContent = "Looks like the librabry is empty, try adding a new book.";
         emptyLibraryMessage.style.display = "inherit";
         document.body.appendChild(emptyLibraryMessage);
     } else {
@@ -166,13 +248,13 @@ const toggleRead = (e) => {
         // changing the value of "read" in the database
         getDatabaseObject(e);
         dbRefBooks.child(targetRefValue).update({
-            read : "Already read"
+            read: "Already read"
         });
     } else {
         // changing the value of "read" in the database
         getDatabaseObject(e);
         dbRefBooks.child(targetRefValue).update({
-            read : "To read"
+            read: "To read"
         });
     }
     renderContent();
@@ -181,8 +263,7 @@ const toggleRead = (e) => {
 
 //hooking up firebase real-time database
 
-//create reference in the database
-const dbRefBooks = firebase.database().ref().child("books");
+
 
 //create the new book ref
 const saveBook = (title, author, pages, read) => {
@@ -191,26 +272,23 @@ const saveBook = (title, author, pages, read) => {
 }
 
 //sync changes
-dbRefBooks.on("value", snap => {
-    console.log(snap.val());
-    myLibrary = [];
-    snap.forEach(element => {
-        elementVal = element.val();
-        newBook = new Book(elementVal.title, elementVal.author, elementVal.pages, elementVal.read);
-        myLibrary.push(newBook);
-    })
-    console.log(myLibrary);
-    renderContent();
-});
+function sync() {
+    dbRefBooks.on("value", snap => {
+        myLibrary = [];
+        snap.forEach(element => {
+            elementVal = element.val();
+            newBook = new Book(elementVal.title, elementVal.author, elementVal.pages, elementVal.read);
+            myLibrary.push(newBook);
+        })
+        renderContent();
+    });
+}
 
-const getDatabaseObject = (e) => {
+function getDatabaseObject(e) {
     dbRefBooks.orderByChild("title").equalTo(e.target.parentNode.id).on("value", function (snapshot) {
-        console.log(snapshot.val());
         const targetRefString = JSON.stringify(snapshot.val());
-        console.log(targetRefString);
         const targetRefArray = Array.from(targetRefString);
         const targetRef = targetRefArray.splice(2, 20).toString();
-        console.log(targetRef);
         targetRefValue = "";
         const getTargetRefValue = () => {
             for (let index = 0; index < targetRef.length; index++) {
@@ -220,6 +298,5 @@ const getDatabaseObject = (e) => {
             }
         };
         getTargetRefValue();
-        console.log(targetRefValue);
     });
 }
