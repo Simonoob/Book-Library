@@ -172,8 +172,8 @@ function addBookToLibrary(e) {
     if (BookAlreadyPresent) {
         const message = document.createElement("span");
         message.setAttribute("id", "book-already-present");
-        
-        if (!document.getElementById("book-already-present")){
+
+        if (!document.getElementById("book-already-present")) {
             form.appendChild(message);
             message.classList.add("message");
             message.textContent = "This book is already in your library. Please choose a different title";
@@ -225,10 +225,45 @@ backButton.addEventListener("click", toggleForm);
 form.addEventListener("submit", addBookToLibrary);
 
 function toggleForm() {
-    newBookButton.classList.toggle("inactive");
-    newBookButton.classList.toggle("active");
-    form.classList.toggle("inactive");
-    form.classList.toggle("active");
+    if (form.classList.contains("inactive")){
+        anime({
+            targets: newBookButton,
+            scale:0,
+            duration: 150,
+            easing: 'easeInOutElastic'
+          });
+        setTimeout(() => {
+            newBookButton.classList.toggle("inactive");
+            newBookButton.classList.toggle("active");
+            form.classList.toggle("inactive");
+            form.classList.toggle("active");
+            anime({
+                targets: form,
+                scale: [0,1],
+                duration: 150,
+                easing: 'easeInOutElastic'
+              });
+        }, 400);
+    } else {
+        anime({
+            targets: form,
+            scale: 0,
+            duration: 150,
+            easing: 'easeInOutElastic'
+            });
+        setTimeout(() => {
+            newBookButton.classList.toggle("inactive");
+            newBookButton.classList.toggle("active");
+            form.classList.toggle("inactive");
+            form.classList.toggle("active");
+            anime({
+                targets: newBookButton,
+                scale:1,
+                duration: 150,
+                easing: 'easeInOutElastic'
+            });
+        }, 400);
+    }
 }
 
 let targetRefValue = "";
@@ -238,26 +273,50 @@ const deleteCard = (e) => {
     const targetIndex = myLibrary.findIndex(book => book.title === target);
     // deleting the object in the database
     getDatabaseObject(e);
-    dbRefBooks.child(targetRefValue).remove()
+    anime({
+        targets: e.target.parentNode,
+        keyframes: [
+            {rotate: 45,
+            translateY: 250,
+            translatex: 100},
+            {translateY: 400,
+            translateX: 200,
+            opacity:0}
+        ],
+        duration: 800,
+        easing: 'easeInOutQuad',
+    })
+    setTimeout(() => {
+        dbRefBooks.child(targetRefValue).remove()
+    }, 1000);
 };
 
 const toggleRead = (e) => {
     const target = e.target
     const targetIndex = myLibrary.findIndex(book => book.title === target.parentNode.id);
-    if (myLibrary[targetIndex].read === "To read") {
-        // changing the value of "read" in the database
-        getDatabaseObject(e);
-        dbRefBooks.child(targetRefValue).update({
-            read: "Already read"
-        });
-    } else {
-        // changing the value of "read" in the database
-        getDatabaseObject(e);
-        dbRefBooks.child(targetRefValue).update({
-            read: "To read"
-        });
-    }
-    renderContent();
+    anime({
+        targets: e.target,
+        rotate: [50,-50,0],
+        
+        easing: "easeInOutElastic",
+        duration: 100
+    });
+    setTimeout(() => {
+        if (myLibrary[targetIndex].read === "To read") {
+            // changing the value of "read" in the database
+            getDatabaseObject(e);
+            dbRefBooks.child(targetRefValue).update({
+                read: "Already read"
+            });
+        } else {
+            // changing the value of "read" in the database
+            getDatabaseObject(e);
+            dbRefBooks.child(targetRefValue).update({
+                read: "To read"
+            });
+        }
+        renderContent();
+    }, 500);
 }
 
 
