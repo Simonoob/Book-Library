@@ -37,7 +37,9 @@ var uiConfig = {
     signInSuccessUrl: 'index.html',
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+
     ],
     // Terms of service url.
     tosUrl: '<your-tos-url>',
@@ -84,7 +86,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         loginUi.style.display = "inherit";
         logoutButton.classList.remove("active");
         logoutButton.classList.add("inactive");
-        welcomeMessage.textContent = `You are now in the public space. Log in to manage your personal library`;
+        welcomeMessage.textContent = `You are now in the public space. Sign in to access your personal library`;
         logAndMessage.style.position = "sticky";
         setDbRefBooks(user);
         console.log(dbRefBooks.key);
