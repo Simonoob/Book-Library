@@ -77,7 +77,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         logoutButton.classList.add("active");
         logoutButton.classList.remove("inactive");
         welcomeMessage.textContent = `${user.displayName}'s library`;
-        logAndMessage.style.position = "inherit";
         setDbRefBooks(user);
         console.log(dbRefBooks.key);
         sync();
@@ -87,7 +86,6 @@ firebase.auth().onAuthStateChanged(function (user) {
         logoutButton.classList.remove("active");
         logoutButton.classList.add("inactive");
         welcomeMessage.textContent = `You are now in the public space. Sign in to access your personal library`;
-        logAndMessage.style.position = "sticky";
         setDbRefBooks(user);
         console.log(dbRefBooks.key);
         sync();
