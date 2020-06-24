@@ -125,10 +125,18 @@ Book.prototype.createBookCard = function () {
     read.textContent = this.read;
     read.addEventListener("click", toggleRead);
     if (read.textContent === "To read") {
-        book.style.boxShadow = "30px 30px #f03d29";
+        if (window.matchMedia("(max-width: 600px)")){
+            book.style.boxShadow = "10px 10px #f03d29";
+        } else {
+            book.style.boxShadow = "30px 30px #f03d29";
+        }
     } else {
         read.style.background = "lightgreen";
-        book.style.boxShadow = "30px 30px lightgreen";
+        if (window.matchMedia("(max-width: 600px)")){
+            book.style.boxShadow = "10px 10px lightgreen";
+        } else{
+            book.style.boxShadow = "30px 30px lightgreen";
+        }
     }
 
 
@@ -359,3 +367,35 @@ function getDatabaseObject(e) {
         getTargetRefValue();
     });
 }
+
+//humburger action for mobile
+    const humburgerButton = document.getElementById("humburger");
+    humburgerButton.addEventListener ("click", () => {
+        if (humburgerButton.style.width === "52px"){
+            anime({
+                targets: humburgerButton,
+                width: "100vw",
+                duration: 500
+            });
+            setTimeout(() => {
+                anime({
+                    targets: logAndMessage,
+                    top: "57.33px",
+                    duration: 500
+                })
+            }, 500);
+        } else {
+            anime({
+                targets: logAndMessage,
+                top: "-100em",
+                duration: 700
+            });
+            setTimeout(() => {
+                anime({
+                    targets: humburgerButton,
+                    width: "52px",
+                    duration: 500
+                })
+            }, 500);
+        }
+});

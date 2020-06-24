@@ -1,0 +1,132 @@
+@media only screen and (max-width: 600px){
+    body{
+        font-size: .5em;
+
+        #humburger{
+            display: block;
+            position: fixed;
+            top: 0;
+            right: 0;
+            font-size: 3em;
+            padding: .5em;
+            width: 52px;
+            background-color: #f03d29;
+            border-radius: 7px;
+            border: 2px solid #1f3c38;
+            color: #fdfbf8;
+            z-index: 2;
+        }
+
+        #log-and-message{
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: -100em;
+            #welcome-message{
+                font-size: 1.2rem;
+                text-align: center;
+                margin: .5em;
+            }
+            
+            .log{
+                font-size: 1.5rem;
+                padding: .5em;
+            }
+        }
+
+        .button{
+            border-width: 2px;
+            border-radius: 7px;
+        }
+
+        .firebaseui-card-content{
+            max-width: 100vw;
+            .firebaseui-idp-button{
+                padding: .5em;          
+                max-width: max-content;
+                min-width: min-content;
+                font-size: .5em;
+                border: 2px solid #1f3c38;
+                text-align: center;
+                margin: auto 1em;
+                box-shadow: none;
+
+                &:hover{
+                    box-shadow: none;
+                    transform: none;
+                }
+            }
+        }
+
+
+        #new-book-form{
+        
+            flex-direction: column;
+            min-width: 15rem;
+            max-width: 38rem;
+            width: 20em;
+            font-size: 2em;
+            margin: 2em auto;
+            padding: 2em;
+            color: #fdfbf8;
+            background-color: #4cae9f;
+            border-radius: 10px;
+            border: 2px solid #1f3c38;
+            box-shadow: 10px 10px #1f3c38;
+            transition: all .2s;
+    
+            input:valid{
+                background-color: lightgreen;
+            }
+    
+            label{
+                font-size: 1em;
+                margin-bottom: 0.5em;
+            }
+    
+            .entry{
+                font-size: 0.7em;
+                border-radius: 10px;
+                border: 2px solid #1f3c38;
+                outline: none;
+                padding: 1rem;
+                margin-bottom: 1.5em;
+            }
+    
+            #submit{
+                padding: .5em;
+                font-size: 1.5em;
+                border: 2px solid #1f3c38;
+            }
+    
+            #back{
+                border: 2px solid #1f3c38;
+            }
+        }
+
+        #library{
+            grid-template-columns: repeat(auto-fit , 20rem);
+            section{
+                font-size: 2em;
+                border-radius: 7px;
+                box-shadow: 10px 10px #1f3c38;
+                border: 2px solid #1f3c38;
+                .read{
+                    font-size: 1.5em;
+                    margin: .25em;
+                    padding: .25em;
+                    width: fit-content;
+                }
+    
+                #to-read{
+                    box-shadow: 10px 10px #f03d29;
+                }
+    
+                .already-read{
+                    background-color: lightgreen;
+                    box-shadow: 10px 10px lightgreen;
+                }
+            }
+        }
+    }
+}

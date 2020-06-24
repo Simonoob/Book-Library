@@ -1,3 +1,4 @@
+
 *{
     box-sizing: border-box;
     padding: 0;
@@ -262,4 +263,9 @@ body{
         text-align: center;
         padding: 0.5em; 
     }
+    #humburger{
+        display: none;
+    }
 }
+
+@import "mobile";
